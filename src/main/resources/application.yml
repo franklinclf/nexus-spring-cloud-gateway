@@ -1,8 +1,8 @@
 spring:
   application:
-    name: "Gateway"
-  profiles:
-    active: dev
+    name: Gateway
+  config:
+    import: "configserver:"
   cloud:
     config:
       discovery:
@@ -14,3 +14,17 @@ spring:
         max-interval: 2000
         multiplier: 1.1
         max-attempts: 6
+
+  profiles:
+    active: dev
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://eureka-1:8761/eureka/,http://eureka-2:8761/eureka/,http://eureka-3:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: true
+  instance:
+    instance-id: ${spring.application.name}
