@@ -14,7 +14,6 @@ spring:
         max-interval: 2000
         multiplier: 1.1
         max-attempts: 6
-
   profiles:
     active: dev
 
