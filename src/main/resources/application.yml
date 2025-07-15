@@ -16,3 +16,14 @@ spring:
         max-attempts: 6
   profiles:
     active: dev
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://docker.host.internal:8761/eureka, http://docker.host.internal:8762/eureka
+    register-with-eureka: true
+    fetch-registry: true
+    initial-instance-info-replication-interval-seconds: 0
+    registry-fetch-interval-seconds: 5
+  instance:
+    instance-id: ${spring.application.name}
