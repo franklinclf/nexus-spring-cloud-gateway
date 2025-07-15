@@ -1,13 +1,17 @@
+server:
+  port: 8080
 spring:
   application:
     name: Gateway
   config:
     import: "configserver:"
   cloud:
+    discovery:
+      enabled: true
     config:
       discovery:
         enabled: true
-        service-id: config
+        service-id: Config
       fail-fast: true
       retry:
         initial-interval: 1000
@@ -20,10 +24,12 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://docker.host.internal:8761/eureka, http://docker.host.internal:8762/eureka
+      defaultZone: http://eureka-1:8761/eureka, http://eureka-2:8762/eureka
     register-with-eureka: true
     fetch-registry: true
     initial-instance-info-replication-interval-seconds: 0
     registry-fetch-interval-seconds: 5
   instance:
-    instance-id: ${spring.application.name}
+    instance-id: gateway-${REPLICA_ID:1}
+    hostname: gateway-${REPLICA_ID:1}
+    appname: gateway
