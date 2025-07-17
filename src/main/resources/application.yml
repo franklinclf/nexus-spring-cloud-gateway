@@ -1,59 +1,36 @@
-server:
-  port: 8080
 spring:
+  profiles:
+    active: ${SPRING_PROFILE:dev}
   application:
-    name: gateway
+    name: Gateway
   config:
     import: "configserver:"
   cloud:
-    discovery:
-      enabled: true
     config:
       discovery:
         enabled: true
-        service-id: Config
+        service-id: config
       fail-fast: true
       retry:
         initial-interval: 1000
-        max-interval: 2000
+        max-interval: 4000
         multiplier: 1.1
-        max-attempts: 6
-    gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              lower-case-service-id: true
-              enabled: true
-          routes:
-            - id: mcp-tools
-              uri: lb://mcp
-              predicates:
-                - Path=/mcp/tools/**
-              filters:
-                - StripPrefix=2
-              order: -1
-
-  profiles:
-    active: dev
+        max-attempts: 10
+      name: Gateway
+      label: main
+      profile: ${SPRING_PROFILE:dev}
   main:
     web-application-type: reactive
 
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka-1:8761/eureka, http://eureka-2:8762/eureka
-    register-with-eureka: false
+      defaultZone: ${EUREKA_REPLICAS:http://eureka-1:8761/eureka,http://eureka-2:8762/eureka,http://eureka-3:8763/eureka}
+    register-with-eureka: true
     fetch-registry: true
-    initial-instance-info-replication-interval-seconds: 0
+    instance-info-replication-interval-seconds: 10
     registry-fetch-interval-seconds: 5
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-    access:
-      default: unrestricted
-  endpoint:
-    gateway:
-      access: unrestricted
+  instance:
+    instance-id: ${spring.application.name}-${REPLICA_ID:1}
+    hostname: ${spring.application.name}-${REPLICA_ID:1}
+    app-group-name: ${spring.application.name}
