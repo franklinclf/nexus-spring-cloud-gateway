@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: ${SPRING_PROFILE:dev}
+  main:
+    web-application-type: reactive
   application:
     name: Gateway
   config:
@@ -16,16 +18,11 @@ spring:
         max-interval: 4000
         multiplier: 1.1
         max-attempts: 10
-      name: Gateway
-      label: main
-      profile: ${SPRING_PROFILE:dev}
-  main:
-    web-application-type: reactive
 
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_REPLICAS:http://eureka-1:8761/eureka,http://eureka-2:8762/eureka,http://eureka-3:8763/eureka}
+      defaultZone: ${EUREKA_REPLICAS:http://eureka-1:8761/eureka,http://eureka-2:8762/eureka}
     register-with-eureka: true
     fetch-registry: true
     instance-info-replication-interval-seconds: 10
