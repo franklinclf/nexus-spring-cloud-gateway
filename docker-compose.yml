@@ -1,0 +1,16 @@
+services:
+  gateway:
+    build:
+      context: ./
+    ports:
+      - "8080:8080"
+    container_name: gateway
+    environment:
+      - EUREKA_REPLICAS=http://eureka-1:8761/eureka/,http://eureka-2:8762/eureka/,http://eureka-3:8763/eureka/
+      - PORT=8080
+    networks:
+      - nexus-dev
+
+networks:
+  nexus-dev:
+    external: true
